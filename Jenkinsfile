@@ -33,6 +33,18 @@ pipeline {
                 sh 'echo "No frontend tests yet"'
             }
         }
+        stage('Run Backend Smoke Test') {
+            steps {
+                sh '''
+                    echo "Starting backend server for smoke test..."
+                    cd backend
+                    node server.js &
+                    sleep 5
+                '''
+                sh 'curl http://localhost:4000/expenses'
+            }
+        }
+
     }
 }
 
