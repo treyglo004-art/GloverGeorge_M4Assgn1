@@ -1,3 +1,4 @@
+timestamps {
 pipeline {
     agent any
 
@@ -45,6 +46,12 @@ pipeline {
             }
         }
 
+    }// end stages
+
+  post {
+    always {
+      cleanWs()
     }
+  }
 }
 
