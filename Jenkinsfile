@@ -1,6 +1,9 @@
-timestamps {
 pipeline {
     agent any
+
+    options {
+        timestamps()  
+    }
 
     stages {
 
@@ -34,6 +37,7 @@ pipeline {
                 sh 'echo "No frontend tests yet"'
             }
         }
+
         stage('Run Backend Smoke Test') {
             steps {
                 sh '''
@@ -46,12 +50,14 @@ pipeline {
             }
         }
 
-    }// end stages
+    } // end stages
 
-  post {
-    always {
-      cleanWs()
+    post {
+        always {
+            cleanWs()
+        }
     }
-  }
 }
-}
+          
+                
+                    
