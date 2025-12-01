@@ -74,4 +74,10 @@ post {
     }
 }
 
+post {
+    failure {
+        echo 'Incident Response: Build Failed. Logging incident.'
+        archiveArtifacts 'incident-report.txt'
+    }
+}
                     
