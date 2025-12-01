@@ -64,5 +64,14 @@ post {
             mail to: 'george.glover@lsu.edu',
                  subject: "Jenkins Build Failed",
                  body: "The build has failed. Please check Jenkins."
-                
+            
+    }
+}
+
+post {
+    always {
+        archiveArtifacts artifacts: '**/logs/*.log', fingerprint: true
+    }
+}
+
                     
