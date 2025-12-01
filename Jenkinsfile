@@ -54,30 +54,30 @@ pipeline {
 
     post {
         always {
+            echo "Cleaning workspace"
             cleanWs()
+        }
+
+        success {
+            echo "Build completed successfully."
+        }
+
+        failure {
+            echo "Build failed — sending email notification."
+            mail to: 'george.glover@lsu.edu',
+                subject: "Jenkins Build Failed: ${env.JOB_NAME}",
+                body: "The build #${env.BUILD_NUMBER} has failed. Check Jenkins for details."
+
+            echo "Incident Response: Logging incident file."
+            sh 'echo "Build failed on $(date)" > incident-report.txt'
+            archiveArtifacts artifacts: 'incident-report.txt'
+        }
+
+        always {
+            echo "Archiving logs..."
+            archiveArtifacts artifacts: '**/logs/*.log', fingerprint: true
         }
     }
 }
+    
 
-post {
-        failure {
-            mail to: 'george.glover@lsu.edu',
-                 subject: "Jenkins Build Failed",
-                 body: "The build has failed. Please check Jenkins."
-            
-    }
-}
-
-post {
-    always {
-        archiveArtifacts artifacts: '**/logs/*.log', fingerprint: true
-    }
-}
-
-post {
-    failure {
-        echo 'Incident Response: Build Failed. Logging incident.'
-        archiveArtifacts 'incident-report.txt'
-    }
-}
-                    
