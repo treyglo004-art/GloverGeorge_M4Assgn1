@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     options {
-        timestamps()  
+        timestamps()
     }
 
     stages {
@@ -53,26 +53,34 @@ pipeline {
 
     post {
 
-        // This ALWAYS runs (success or failure)
         always {
             echo "Cleaning workspace..."
             cleanWs()
 
             echo "Archiving logs..."
-            archiveArtifacts artifacts: '**/logs/*.log', fingerprint: true
+
+            script {
+                if (fileExists('backend/logs')) {
+                    archiveArtifacts artifacts: 'backend/logs/*.log', fingerprint: true
+                } else {
+                    echo "No logs directory found — skipping artifact archiving."
+                }
+            }
         }
 
-        // Runs on SUCCESS only
         success {
             echo "Build completed successfully."
         }
 
-        // Runs on FAILURE only
         failure {
-            echo "Build failed — sending email notification."
+            echo "Build failed — (email disabled to prevent failure)."
+
+            // Email disabled because SMTP is not configured
+            /*
             mail to: 'george.glover@lsu.edu',
                 subject: "Jenkins Build Failed: ${env.JOB_NAME}",
                 body: "The build #${env.BUILD_NUMBER} has failed. Check Jenkins."
+            */
 
             echo "Incident Response: Logging incident file."
             sh 'echo "Build failed on $(date)" > incident-report.txt'
