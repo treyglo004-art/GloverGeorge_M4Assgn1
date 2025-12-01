@@ -58,6 +58,11 @@ pipeline {
         }
     }
 }
-          
+
+post {
+        failure {
+            mail to: 'george.glover@lsu.edu',
+                 subject: "Jenkins Build Failed",
+                 body: "The build has failed. Please check Jenkins."
                 
                     
